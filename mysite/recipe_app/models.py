@@ -16,13 +16,18 @@ class Recipe(models.Model):
     title = models.CharField(max_length=100, verbose_name='Название рецепта')
     description = models.TextField(null=False, blank=True, verbose_name='Описание')
     cooking_time = models.PositiveIntegerField(verbose_name="Время приготовления в минутах")
-    author = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Автор')
+    author = models.ForeignKey(User, on_delete=models.PROTECT, related_name='author_recipe', verbose_name='Автор')
     create_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата публикации')
     preview = models.ImageField(
         null=True,
         blank=True,
         upload_to=recipe_preview_directory_path,
         verbose_name='Изображение рецепта'
+    )
+    category = models.ManyToManyField(
+        "Category",
+        related_name='categories',
+        verbose_name='Категория'
     )
 
     class Meta:

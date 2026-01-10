@@ -11,7 +11,7 @@ def recipe_preview_directory_path(instance: "Recipe", filename: str) -> str:
 
 class Recipe(models.Model):
     """
-    Модель Рецепты
+    Рецепт
     """
     title = models.CharField(max_length=100, verbose_name='Название рецепта')
     description = models.TextField(null=False, blank=True, verbose_name='Описание')
@@ -36,7 +36,7 @@ class Recipe(models.Model):
 
 class Step(models.Model):
     """
-    Шаги приготовления
+    Шаг приготовления
     """
     recipe = models.ForeignKey(
         Recipe,
@@ -55,3 +55,21 @@ class Step(models.Model):
     def __str__(self):
         return f"Шаг {self.step_number}: {self.description[:20]}..."
 
+
+class Category(models.Model):
+    """
+    Категория рецепта
+    """
+    name = models.CharField(
+        max_length=50,
+        help_text="Укажите категорию (например, завтрак, обед, на праздник, и т.д.)",
+        verbose_name='Название категории'
+    )
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
+
+    def __str__(self):
+        return self.name

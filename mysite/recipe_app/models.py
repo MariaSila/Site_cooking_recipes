@@ -32,3 +32,26 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Step(models.Model):
+    """
+    Шаги приготовления
+    """
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='steps',
+        verbose_name='Рецепт'
+    )
+    description = models.TextField(verbose_name='Описание шага')
+    step_number = models.PositiveIntegerField(verbose_name='Номер шага')
+
+    class Meta:
+        ordering = ['step_number']
+        verbose_name = 'Шаг приготовления'
+        verbose_name_plural = 'Шаги приготовления'
+
+    def __str__(self):
+        return f"Шаг {self.step_number}: {self.description[:20]}..."
+

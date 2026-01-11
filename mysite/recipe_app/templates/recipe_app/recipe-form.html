@@ -1,0 +1,23 @@
+{% extends 'recipe_app/base.html' %}
+
+{% block title %}
+    Create recipe
+{% endblock %}
+
+{% block body %}
+    <h1>Create recipe</h1>
+    <div>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">
+                Create
+            </button>
+        </form>
+    </div>
+    <div>
+        <a href="{% url 'recipe_app:recipies_list' %}">
+            Back to recipies list
+        </a>
+    </div>
+{% endblock %}

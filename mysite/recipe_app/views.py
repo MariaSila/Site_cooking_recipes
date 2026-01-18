@@ -1,6 +1,7 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, reverse
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, DetailView, UpdateView
+from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
 from .models import Recipe, Category
 from .forms import RecipeCreateForm
 
@@ -50,3 +51,14 @@ class RecipeUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse('recipe_app:recipe_details', kwargs={'pk': self.object.pk},)
+
+
+class RecipeDeleteView(DeleteView):
+    model = Recipe
+    success_url = reverse_lazy("recipe_app:recipies_list")
+
+    def form_valid(self, form):
+        success_url = self.get_success_url()
+        # self.object.archived = True
+        self.object.save()
+        return HttpResponseRedirect(success_url)

@@ -1,0 +1,22 @@
+{% extends 'recipe_app/base.html' %}
+
+{% block title %}
+  Рецепт #{{ object.pk }}
+{% endblock %}
+
+{% block body %}
+  <h1>Рецепт <strong>{{ object.title }}</strong></h1>
+    <div>
+      <div><em>{{ object.description }}</em></div>
+      <div>Время приготовления: {{ object.cooking_time }} минут</div>
+      <div>Приготовление:
+        <br>
+        {{ object.step }}
+      </div>
+      <div>Автор: {{ object.author }}</div>
+      <div>Категория: {{ object.category }}</div>
+    </div>
+  <div>
+    <a href="{% url 'recipe_app:recipies_list' %}">Back to products list</a>
+  </div>
+{% endblock %}

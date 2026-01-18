@@ -6,12 +6,12 @@
 
 {% block body %}
     <h1> Рецепты:</h1>
-    {% if recipies %}
+    {% if posts %}
         <div>
-            {% for recipe in recipies %}
+            {% for recipe in posts %}
                 <div>
 
-                    <p>Рецепт: {{ recipe.title }}</p>
+                    <p><a href="{% url 'recipe_app:recipe_details' pk=recipe.pk %}"> Рецепт: {{ recipe.title }}</a></p>
                     <p>{{ recipe.description|truncatechars:20 }}</p>
 
                 </div>

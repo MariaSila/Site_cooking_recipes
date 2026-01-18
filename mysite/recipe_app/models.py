@@ -3,22 +3,23 @@ from random import randint
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Max, Min
+from django.shortcuts import render
 
 from mysite.settings import COUNT_RND
 
 
-class RandomManager(models.Manager):
-    def truly_random(self):
-        max_id = self.aggregate(max_id=Max("id"))['max_id']
-        if max_id:
-            min_id = self.aggregate(min_id=Min("id"))['min_id']
-            random_id = randint(min_id, max_id)
-            return self.filter(id__gte=random_id).first()
-
-
-class CountRandomManager(RandomManager):
-    def get_queryset(self):
-        return super().get_queryset().order_by('?')[:COUNT_RND]
+# class RandomManager(models.Manager):
+#     def truly_random(self):
+#         max_id = self.aggregate(max_id=Max("id"))['max_id']
+#         if max_id:
+#             min_id = self.aggregate(min_id=Min("id"))['min_id']
+#             random_id = randint(min_id, max_id)
+#             return self.filter(id__gte=random_id).first()
+#
+#
+# class CountRandomManager(RandomManager):
+#     def get_queryset(self):
+#         return super().get_queryset().order_by('?').first()
 
 
 def recipe_preview_directory_path(instance: "Recipe", filename: str) -> str:
@@ -61,7 +62,8 @@ class Recipe(models.Model):
     def __str__(self):
         return self.title
 
-    objects = CountRandomManager()
+    # objects = models.Manager()
+    # custom = CountRandomManager
 
 
 class Category(models.Model):

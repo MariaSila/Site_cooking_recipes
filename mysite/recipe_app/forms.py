@@ -9,7 +9,7 @@ class RecipeCreateForm(forms.ModelForm):
 
     class Meta:
         model = Recipe
-        fields = ('title', 'description', 'category', 'step', 'cooking_time', 'preview')
+        fields = ('title', 'ingredients', 'description', 'category', 'step', 'cooking_time', 'preview')
 
     def __init__(self, *args, **kwargs):
         """

@@ -8,20 +8,6 @@ from django.shortcuts import render
 from mysite.settings import COUNT_RND
 
 
-# class RandomManager(models.Manager):
-#     def truly_random(self):
-#         max_id = self.aggregate(max_id=Max("id"))['max_id']
-#         if max_id:
-#             min_id = self.aggregate(min_id=Min("id"))['min_id']
-#             random_id = randint(min_id, max_id)
-#             return self.filter(id__gte=random_id).first()
-#
-#
-# class CountRandomManager(RandomManager):
-#     def get_queryset(self):
-#         return super().get_queryset().order_by('?').first()
-
-
 def recipe_preview_directory_path(instance: "Recipe", filename: str) -> str:
     return f"recipes/recipe_{pk}/preview/{filename}".format(
         pk=instance.pk,
@@ -34,6 +20,7 @@ class Recipe(models.Model):
     Рецепт
     """
     title = models.CharField(max_length=100, verbose_name='Название рецепта')
+    ingredients = models.TextField(null=True, blank=True, verbose_name='Список ингредиентов')
     description = models.TextField(null=False, blank=True, verbose_name='Описание')
     cooking_time = models.PositiveIntegerField(verbose_name="Время приготовления в минутах")
     author = models.ForeignKey(User, on_delete=models.PROTECT, related_name='author_recipe', verbose_name='Автор')
@@ -61,9 +48,6 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.title
-
-    # objects = models.Manager()
-    # custom = CountRandomManager
 
 
 class Category(models.Model):

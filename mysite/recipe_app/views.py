@@ -1,3 +1,5 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, reverse
 from django.urls import reverse_lazy
@@ -26,7 +28,7 @@ class RecipeDetailView(DetailView):
     context_object_name = 'recipe'
 
 
-class RecipeCreateView(CreateView):
+class RecipeCreateView(LoginRequiredMixin, CreateView):
     template_name = 'recipe_app/recipe-form.html'
     model = Recipe
     form_class = RecipeCreateForm
@@ -44,18 +46,28 @@ class RecipeCreateView(CreateView):
         return response
 
 
-class RecipeUpdateView(UpdateView):
+class RecipeUpdateView(UserPassesTestMixin, SuccessMessageMixin, UpdateView):
     model = Recipe
     form_class = RecipeCreateForm
     template_name_suffix = '_update_form'
+    success_message = 'Рецепт был успешно обновлен!'
+
+    def test_func(self):
+        obj = self.get_object()
+        return obj.author == self.request.user
 
     def get_success_url(self):
         return reverse('recipe_app:recipe_details', kwargs={'pk': self.object.pk},)
 
 
-class RecipeDeleteView(DeleteView):
+class RecipeDeleteView(UserPassesTestMixin, SuccessMessageMixin, DeleteView):
     model = Recipe
     success_url = reverse_lazy("recipe_app:recipies_list")
+    success_message = 'Рецепт был успешно удалён!'
+
+    def test_func(self):
+        obj = self.get_object()
+        return obj.author == self.request.user
 
     def form_valid(self, form):
         success_url = self.get_success_url()

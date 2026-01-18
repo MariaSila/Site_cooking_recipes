@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 
+from django.urls import reverse_lazy
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -39,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'recipe_app.apps.RecipeAppConfig',
+    'myauth.apps.MyauthConfig',
 ]
 
 MIDDLEWARE = [
@@ -121,3 +124,16 @@ STATIC_ROOT = BASE_DIR / 'static'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'uploads'
+
+
+# Redirect
+LOGIN_REDIRECT_URL = reverse_lazy('recipe_app:recipies_list')
+LOGIN_URL = reverse_lazy('myauth:login')
+
+
+# Model fields
+# DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Constant
+COUNT_RND = 5

@@ -5,10 +5,23 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Hello recipies list!</h1>
+    <h1> Рецепты:</h1>
+    {% if recipies %}
+        <div>
+            {% for recipe in recipies %}
+                <div>
+
+                    <p>Рецепт: {{ recipe.title }}</p>
+                    <p>{{ recipe.description|truncatechars:20 }}</p>
+
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <h3>No recipies yet</h3>
+    {% endif %}
     <div>
-        <a href="{% url 'recipe_app:recipe_create' %}">
-            Create a new recipe
-        </a>
+        <a href="{% url 'recipe_app:recipe_create' %}"
+           >Create a new recipe</a>
     </div>
 {% endblock %}

@@ -1,5 +1,24 @@
+from random import randint
+
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import Max, Min
+
+from mysite.settings import COUNT_RND
+
+
+class RandomManager(models.Manager):
+    def truly_random(self):
+        max_id = self.aggregate(max_id=Max("id"))['max_id']
+        if max_id:
+            min_id = self.aggregate(min_id=Min("id"))['min_id']
+            random_id = randint(min_id, max_id)
+            return self.filter(id__gte=random_id).first()
+
+
+class CountRandomManager(RandomManager):
+    def get_queryset(self):
+        return super().get_queryset().order_by('?')[:COUNT_RND]
 
 
 def recipe_preview_directory_path(instance: "Recipe", filename: str) -> str:
@@ -24,11 +43,15 @@ class Recipe(models.Model):
         upload_to=recipe_preview_directory_path,
         verbose_name='Изображение рецепта'
     )
-    category = models.ManyToManyField(
-        "Category",
-        related_name='categories',
-        verbose_name='Категория'
+    category = models.ForeignKey(
+        'Category',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name='Категория',
+        related_name='recipes'
     )
+    step = models.TextField(null=False, blank=True, verbose_name='Шаги приготовления')
 
     class Meta:
         ordering = ['-create_at']
@@ -38,27 +61,7 @@ class Recipe(models.Model):
     def __str__(self):
         return self.title
 
-
-class Step(models.Model):
-    """
-    Шаг приготовления
-    """
-    recipe = models.ForeignKey(
-        Recipe,
-        on_delete=models.CASCADE,
-        related_name='steps',
-        verbose_name='Рецепт'
-    )
-    description = models.TextField(verbose_name='Описание шага')
-    step_number = models.PositiveIntegerField(verbose_name='Номер шага')
-
-    class Meta:
-        ordering = ['step_number']
-        verbose_name = 'Шаг приготовления'
-        verbose_name_plural = 'Шаги приготовления'
-
-    def __str__(self):
-        return f"Шаг {self.step_number}: {self.description[:20]}..."
+    objects = CountRandomManager()
 
 
 class Category(models.Model):

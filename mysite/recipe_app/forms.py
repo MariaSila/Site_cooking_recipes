@@ -1,6 +1,5 @@
 from django import forms
 from .models import Recipe
-from django.forms import inlineformset_factory, modelformset_factory
 
 
 class RecipeCreateForm(forms.ModelForm):
@@ -10,10 +9,15 @@ class RecipeCreateForm(forms.ModelForm):
 
     class Meta:
         model = Recipe
-        fields = ('title', 'description', 'step', 'cooking_time', 'preview')
-        widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'description': forms.TextInput(attrs={'class': 'form-control'}),
-            'step': forms.TextInput(attrs={'class': 'form-control'}),
-            'cooking_time': forms.NumberInput(attrs={'class': 'form-control'}),
-        }
+        fields = ('title', 'description', 'category', 'step', 'cooking_time', 'preview')
+
+    def __init__(self, *args, **kwargs):
+        """
+        Обновление стилей формы под Bootstrap
+        """
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({
+                'class': 'form-control',
+                'autocomplete': 'off'
+            })

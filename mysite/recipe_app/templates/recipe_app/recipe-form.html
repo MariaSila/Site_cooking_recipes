@@ -3,15 +3,16 @@
 {% block title %}
     Create recipe
 {% endblock %}
-
 {% block body %}
-    <h1>Create recipe</h1>
     <div>
-        <form method="post">
+        <h2>Create recipe</h2>
+        <form method="post" novalidate>
             {% csrf_token %}
-            {{ form.as_p }}
+            <div>
+                {{ form.as_p }}
+            </div>
             <button type="submit">
-                Create
+                Сохранить
             </button>
         </form>
     </div>

@@ -16,6 +16,11 @@
       </div>
       <div>Автор: {{ object.author }}</div>
       <div>Категория: {{ object.category }}</div>
+      <div>
+        {% if recipe.preview %}
+          <img src="{{ recipe.preview.url }}" alt="{{ recipe.preview.name }}">
+        {% endif %}
+      </div>
     </div>
   <div>
     <a href="{% url 'recipe_app:recipe_update' pk=recipe.pk %}">Update recipe</a>

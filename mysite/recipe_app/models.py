@@ -9,7 +9,7 @@ from mysite.settings import COUNT_RND
 
 
 def recipe_preview_directory_path(instance: "Recipe", filename: str) -> str:
-    return f"recipes/recipe_{pk}/preview/{filename}".format(
+    return f"recipes/recipe_{instance.pk}/preview/{filename}".format(
         pk=instance.pk,
         filename=filename,
     )

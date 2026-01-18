@@ -13,6 +13,9 @@
 
                     <p><a href="{% url 'recipe_app:recipe_details' pk=recipe.pk %}"> {{ recipe.title }}</a></p>
                     <p>{{ recipe.description|truncatechars:20 }}</p>
+                    {% if recipe.preview %}
+                        <img src="{{ recipe.preview.url }}" alt="{{ recipe.preview.name }}">
+                    {% endif %}
 
                 </div>
             {% endfor %}

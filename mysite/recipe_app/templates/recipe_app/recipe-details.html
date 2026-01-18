@@ -17,6 +17,9 @@
       <div>Категория: {{ object.category }}</div>
     </div>
   <div>
-    <a href="{% url 'recipe_app:recipies_list' %}">Back to products list</a>
+    <a href="{% url 'recipe_app:recipe_update' pk=recipe.pk %}">Update recipe</a>
+  </div>
+  <div>
+    <a href="{% url 'recipe_app:recipies_list' %}">Back to recipies list</a>
   </div>
 {% endblock %}

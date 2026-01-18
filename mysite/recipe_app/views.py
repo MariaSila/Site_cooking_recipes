@@ -1,19 +1,18 @@
-from django.shortcuts import render
+from django.shortcuts import render, reverse
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, DetailView
-
-from mysite.settings import COUNT_RND
+from django.views.generic import CreateView, ListView, DetailView, UpdateView
 from .models import Recipe, Category
 from .forms import RecipeCreateForm
 
 
-def random_recipies_view(request):
-    # COUNT_RND количество случайных записей (установлен в mysite/settings.py)
-    random_recipies = Recipe.objects.order_by('?')[:COUNT_RND]
-    context = {
-        'posts': random_recipies
-    }
-    return render(request, 'recipe_app/recipies-list.html', context)
+class RecipiesListView(ListView):
+    model = Recipe
+    template_name = 'recipe_app/recipies-list.html'
+    context_object_name = 'posts'
+    paginate_by = 5
+
+    def get_queryset(self):
+        return Recipe.objects.order_by('?')
 
 
 class RecipeDetailView(DetailView):
@@ -43,3 +42,11 @@ class RecipeCreateView(CreateView):
         response = super().form_valid(form)
         return response
 
+
+class RecipeUpdateView(UpdateView):
+    model = Recipe
+    form_class = RecipeCreateForm
+    template_name_suffix = '_update_form'
+
+    def get_success_url(self):
+        return reverse('recipe_app:recipe_details', kwargs={'pk': self.object.pk},)

@@ -10,24 +10,34 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+from os import getenv
 from pathlib import Path
+import logging.config
 
 from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+DATABASE_DIR = BASE_DIR / "database"
+DATABASE_DIR.mkdir(exist_ok=True)
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-x*^9_bhzav1fce4$0vlmq!#u*g-aj-#&fsxcida_eqgq29zban'
+SECRET_KEY = getenv(
+    "DJANGO_SECRET_KEY",
+    'django-insecure-x*^9_bhzav1fce4$0vlmq!#u*g-aj-#&fsxcida_eqgq29zban',
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = getenv("DJANGO_DEBUG", "0") == "1"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "0.0.0.0",
+] + getenv("DJANGO_ALLOWED_HOSTS", "").split(",")
 
 
 # Application definition
@@ -80,7 +90,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': DATABASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -130,6 +140,30 @@ MEDIA_ROOT = BASE_DIR / 'uploads'
 LOGIN_REDIRECT_URL = reverse_lazy('recipe_app:recipies_list')
 LOGIN_URL = reverse_lazy('myauth:login')
 
+LOGLEVEL = getenv("DJANGO_LOGLEVEL", "info").upper()
+logging.config.dictConfig({
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "console": {
+            "format": "%(asctime)s %(levelname)s [%(name)s:%(lineno)s] %(module)s %(message)s",
+        },
+    },
+    "handler": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "console",
+        },
+    },
+    "loggers": {
+        "": {
+            "level": LOGLEVEL,
+            "handlers": [
+                "console",
+            ],
+        },
+    },
+})
 
 # Model fields
 # DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -137,3 +171,4 @@ LOGIN_URL = reverse_lazy('myauth:login')
 
 # Constant
 COUNT_RND = 5
+

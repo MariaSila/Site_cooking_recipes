@@ -141,7 +141,30 @@ LOGIN_REDIRECT_URL = reverse_lazy('recipe_app:recipies_list')
 LOGIN_URL = reverse_lazy('myauth:login')
 
 LOGLEVEL = getenv("DJANGO_LOGLEVEL", "info").upper()
-logging.config.dictConfig({
+# logging.config.dictConfig({
+#     "version": 1,
+#     "disable_existing_loggers": False,
+#     "formatters": {
+#         "console": {
+#             "format": "%(asctime)s %(levelname)s [%(name)s:%(lineno)s] %(module)s %(message)s",
+#         },
+#     },
+#     "handlers": {
+#         "console": {
+#             "class": "logging.StreamHandler",
+#             "formatter": "console",
+#         },
+#     },
+#     "loggers": {
+#         "": {
+#             "level": LOGLEVEL,
+#             "handlers": [
+#                 "console",
+#             ],
+#         },
+#     },
+# })
+LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "formatters": {
@@ -149,21 +172,19 @@ logging.config.dictConfig({
             "format": "%(asctime)s %(levelname)s [%(name)s:%(lineno)s] %(module)s %(message)s",
         },
     },
-    "handler": {
+    "handlers": {  # ДОБАВЛЕНА 's' (было handler)
         "console": {
             "class": "logging.StreamHandler",
             "formatter": "console",
         },
     },
     "loggers": {
-        "django": {
+        "": {  # Корневой логгер
             "level": LOGLEVEL,
-            "handlers": [
-                "console",
-            ],
+            "handlers": ["console"],
         },
     },
-})
+}
 
 # Model fields
 # DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

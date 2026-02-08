@@ -5,7 +5,7 @@ from django.db import models
 from django.db.models import Max, Min
 from django.shortcuts import render
 
-from mysite.settings import COUNT_RND
+# from mysite.settings import COUNT_RND
 
 
 def recipe_preview_directory_path(instance: "Recipe", filename: str) -> str:
